@@ -70,7 +70,4 @@ model Message{
   updatedAt DateTime @updatedAt
 
   @@index([conversationId, createdAt(sort: Desc)])
-
-
-  
 }
