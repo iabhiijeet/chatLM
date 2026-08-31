@@ -1,26 +1,27 @@
-// import { startNewChat } from '@/feature/home/actions/start-new-chat'
-// import { redirect } from 'next/navigation'
-// import React from 'react'
+import { loadChatMessages } from "@/features/ai/actions/chat-store";
+import { getConversation } from "@/feature/conversation/action/converstion-action";
+import { ConversationView } from "@/feature/conversation/components/conversation-view";
+import { notFound } from "next/navigation";
+import React from "react";
 
-// /**
-//  * Home page — creates a new chat and redirects to `/c/{id}`.
-//  */
-// const page = async() => {
-//   const conversationId = await startNewChat()
-//   console.log(conversationId);
-  
-  
-//   redirect(`/c/${conversationId}`)
-// }
+type ConversationPageProps = {
+  params: Promise<{ id: string }>;
+};
 
-// export default page
+const page = async ({ params }: ConversationPageProps) => {
+  const { id } = await params;
 
-import React from 'react'
+  try {
+    await getConversation(id);
+  } catch {
+    notFound();
+  }
 
-const page = () => {
+  const initialMessages = await loadChatMessages(id);
+
   return (
-    <div>page</div>
-  )
-}
+    <ConversationView key={id} conversationId={id} initialMessages={initialMessages} />
+  );
+};
 
-export default page
+export default page;

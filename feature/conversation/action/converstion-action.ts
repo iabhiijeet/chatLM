@@ -29,7 +29,7 @@ async function assertOwnConversation(conversationId:string, userId:string){
     return conversation;
 }
 
-async function getConversation(conversationId:string){
+export async function getConversation(conversationId:string){
     const user = await requireUser();
     return await assertOwnConversation(conversationId, user.id);
 }

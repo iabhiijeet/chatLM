@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   MoreHorizontalIcon,
@@ -10,7 +11,8 @@ import {
   PlusIcon,
   Trash2Icon,
 } from "lucide-react";
-import { UserButton } from "@clerk/nextjs";
+import { SignOutButton, UserButton } from "@clerk/nextjs";
+import { LogOutIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 
 import { Button } from "@/components/ui/button";
@@ -72,10 +74,14 @@ export default function AppSidebar() {
               className="font-semibold tracking-tight"
               render={<Link href="/" />}
             >
-              <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-sm text-primary-foreground">
-                C
-              </span>
-              <span>ChaiGPT</span>
+              <Image
+                src="/favicon.svg"
+                alt="Logo"
+                width={32}
+                height={32}
+                className="rounded-lg"
+              />
+              <span>ChatLM</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
@@ -224,7 +230,7 @@ function ChatItem({
   );
 }
 
-/** Footer menu with theme toggle and Clerk user account button. */
+/** Footer menu with theme toggle, logout, and Clerk user account button. */
 function SidebarFooterMenu() {
   const { resolvedTheme, setTheme } = useTheme();
 
@@ -254,6 +260,21 @@ function SidebarFooterMenu() {
             Account
           </span>
         </div>
+      </SidebarMenuItem>
+      <SidebarMenuItem>
+        <SignOutButton>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="w-full justify-start text-destructive hover:bg-destructive/10 hover:text-destructive"
+          >
+            <LogOutIcon className="size-4" />
+            <span className="group-data-[collapsible=icon]:hidden">
+              Logout
+            </span>
+          </Button>
+        </SignOutButton>
       </SidebarMenuItem>
     </SidebarMenu>
   );
