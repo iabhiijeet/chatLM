@@ -63,6 +63,7 @@ export async function createMessage(conversationId: string, content: string) {
       role: "USER",
       status: "COMPLETE",
       content: trimmed,
+      parts: [{ type: "text", text: trimmed }],
     },
   });
 
