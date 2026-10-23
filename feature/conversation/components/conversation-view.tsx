@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { ChatEmpty } from "./chat-empty";
 import { ChatMessages } from "./chat-messages";
 import { ChatComposer } from "./chat-composer";
+import { WispMark } from "@/components/wisp-mark";
 
 type ConversationViewProps = {
   conversationId: string;
@@ -38,7 +39,7 @@ export const ConversationView = ({
     []
   );
 
-  const { messages, sendMessage, status } = useChat({
+  const { messages, sendMessage, status, stop } = useChat({
     id: conversationId,
     messages: initialMessages,
     transport,
@@ -57,14 +58,15 @@ export const ConversationView = ({
 
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col">
-      <header className="flex h-14 shrink-0 items-center gap-2 border-b px-3">
+      <header className="flex h-16 shrink-0 items-center gap-2 border-b border-border/60 px-4 md:px-6">
         <SidebarTrigger />
         <Separator orientation="vertical" className="mx-1 h-4" />
         <h1 className="truncate text-sm font-medium">{title}</h1>
+        <span className="ml-auto flex shrink-0 items-center gap-1.5 text-xs text-muted-foreground"><WispMark className="size-5 text-primary" /> Wisp <span className="hidden sm:inline">/ Mistral</span></span>
       </header>
 
       {messages.length === 0 ? (
-        <ChatEmpty />
+        <ChatEmpty onSuggestion={(text) => { void sendMessage({ text }); }} />
       ) : (
         <ChatMessages messages={messages} status={status} />
       )}
@@ -73,7 +75,8 @@ export const ConversationView = ({
         onSend={(text) => {
           void sendMessage({ text });
         }}
-        isSending={status !== "ready"}
+        isSending={status === "submitted" || status === "streaming"}
+        onStop={() => { void stop(); }}
         autoFocus
       />
     </div>

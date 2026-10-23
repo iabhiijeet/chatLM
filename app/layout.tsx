@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { QueryProvider } from "@/components/providers/query-provider";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -20,16 +21,16 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "ChatLM",
-    template: "%s | ChatLM",
+    default: "Wisp — A little space to think",
+    template: "%s | Wisp",
   },
   description:
-    "An AI-powered chat application built with Next.js, Vercel AI SDK & Mistral. Chat with an intelligent assistant in real time.",
+    "A quiet space for your busy mind. Write, wonder, and work things out with Wisp, your thoughtful AI companion.",
   icons: {
     icon: "/favicon.svg",
   },
   openGraph: {
-    title: "ChatLM",
+    title: "Wisp — A little space to think",
     description:
       "AI-powered chat with streaming responses, persistent conversations & more.",
     type: "website",
@@ -64,6 +65,7 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               {children}
+              <Toaster richColors />
             </ThemeProvider>
           </QueryProvider>
         </ClerkProvider>

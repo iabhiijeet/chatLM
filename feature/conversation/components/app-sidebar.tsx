@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import { WispMark } from "@/components/wisp-mark";
 import { usePathname } from "next/navigation";
 import {
   MoreHorizontalIcon,
@@ -10,6 +10,8 @@ import {
   PinOffIcon,
   PlusIcon,
   Trash2Icon,
+  MoonIcon,
+  SunIcon,
 } from "lucide-react";
 import { SignOutButton, UserButton } from "@clerk/nextjs";
 import { LogOutIcon } from "lucide-react";
@@ -66,28 +68,22 @@ export default function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon" variant="inset">
-      <SidebarHeader className="gap-2">
+      <SidebarHeader className="gap-4 px-3 pt-5 pb-4">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
               size="lg"
-              className="font-semibold tracking-tight"
+              className="font-semibold tracking-tight hover:bg-transparent"
               render={<Link href="/" />}
             >
-              <Image
-                src="/favicon.svg"
-                alt="Logo"
-                width={32}
-                height={32}
-                className="rounded-lg"
-              />
-              <span>ChatLM</span>
+              <WispMark className="size-8 shrink-0 text-primary" />
+              <span className="font-serif text-3xl tracking-tighter">wisp</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton tooltip="New chat" render={<Link href="/" />}>
+            <SidebarMenuButton className="new-chat-button h-10 rounded-lg border border-border bg-background shadow-xs" tooltip="New conversation" render={<Link href="/" />}>
               <PlusIcon />
-              <span>New chat</span>
+              <span>New conversation</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -95,7 +91,7 @@ export default function AppSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Chats</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-[10px] uppercase tracking-[0.15em]">Your conversations</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               <ChatList
@@ -108,7 +104,7 @@ export default function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter>
+      <SidebarFooter className="border-t border-sidebar-border p-3">
         <SidebarFooterMenu />
       </SidebarFooter>
       <SidebarRail />
@@ -241,10 +237,11 @@ function SidebarFooterMenu() {
           type="button"
           variant="ghost"
           size="sm"
-          className="w-full justify-start"
+          className="w-full justify-start group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:p-0"
           onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
         >
-          Toggle theme
+          <SunIcon className="hidden size-4 dark:block" /><MoonIcon className="size-4 dark:hidden" />
+          <span className="group-data-[collapsible=icon]:hidden">Switch appearance</span>
         </Button>
       </SidebarMenuItem>
       <SidebarMenuItem>

@@ -6,6 +6,7 @@ import type { ChatStatus } from "ai";
 import {
   Conversation,
   ConversationContent,
+  ConversationScrollButton,
 } from "@/components/ai-elements/conversation";
 import {
   Message,
@@ -13,6 +14,7 @@ import {
   MessageResponse,
 } from "@/components/ai-elements/message";
 import { Loader } from "@/components/ai-elements/loader";
+import { WispMark } from "@/components/wisp-mark";
 
 function getMessageText(message: UIMessage) {
   return message.parts
@@ -32,11 +34,12 @@ export function ChatMessages({ messages, status }: ChatMessagesProps) {
 
   return (
     <Conversation>
-      <ConversationContent className="py-8">
+      <ConversationContent className="mx-auto w-full max-w-3xl px-5 py-8 md:px-6">
         {messages.map((message) => (
-          <Message key={message.id} from={message.role}>
+          <Message key={message.id} from={message.role} className="wisp-enter">
+            {message.role === "assistant" && <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground"><WispMark className="size-6 text-primary" /> Wisp</div>}
             <MessageContent>
-              <MessageResponse>{getMessageText(message)}</MessageResponse>
+              <MessageResponse isAnimating={message.role === "assistant" && status === "streaming" && message.id === messages.at(-1)?.id}>{getMessageText(message)}</MessageResponse>
             </MessageContent>
           </Message>
         ))}
@@ -49,6 +52,7 @@ export function ChatMessages({ messages, status }: ChatMessagesProps) {
           </Message>
         ) : null}
       </ConversationContent>
+      <ConversationScrollButton aria-label="Scroll to latest message" />
     </Conversation>
   );
 }

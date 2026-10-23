@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ArrowUpIcon } from "lucide-react";
+import { ArrowUpIcon, SquareIcon } from "lucide-react";
 
 import {
   InputGroup,
@@ -9,7 +9,6 @@ import {
   InputGroupButton,
   InputGroupTextarea,
 } from "@/components/ui/input-group";
-import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 
 type ChatComposerProps = {
@@ -18,14 +17,16 @@ type ChatComposerProps = {
   placeholder?: string;
   className?: string;
   autoFocus?: boolean;
+  onStop?: () => void;
 };
 
 export function ChatComposer({
   onSend,
   isSending = false,
-  placeholder = "Message ChatLM...",
+  placeholder = "Ask a question. Follow a thought…",
   className,
   autoFocus = false,
+  onStop,
 }: ChatComposerProps) {
   const [value, setValue] = React.useState("");
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
@@ -47,7 +48,7 @@ export function ChatComposer({
   }
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLTextAreaElement>) {
-    if (event.key === "Enter" && !event.shiftKey) {
+    if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing) {
       event.preventDefault();
       void handleSubmit();
     }
@@ -60,32 +61,34 @@ export function ChatComposer({
       onSubmit={(event) => void handleSubmit(event)}
       className={cn("mx-auto w-full max-w-3xl px-4 pb-4 md:px-6", className)}
     >
-      <InputGroup className="h-auto min-h-14 rounded-3xl border-border/80 bg-background shadow-sm dark:bg-input/40">
+      <InputGroup className="wisp-composer h-auto min-h-20 rounded-2xl border-border bg-card shadow-sm">
         <InputGroupTextarea
           ref={textareaRef}
           value={value}
           onChange={(event) => setValue(event.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
+          aria-label="Message Wisp"
           disabled={isSending}
           rows={1}
-          className="max-h-48 min-h-12 py-3.5 pl-4 text-[15px] leading-relaxed"
+          className="max-h-48 min-h-20 py-5 pl-5 text-[15px] leading-relaxed"
         />
         <InputGroupAddon align="inline-end" className="pr-2 pb-2 self-end">
           <InputGroupButton
-            type="submit"
+            type={isSending ? "button" : "submit"}
+            onClick={isSending ? onStop : undefined}
             size="icon-sm"
             variant="default"
-            disabled={!canSend}
+            disabled={isSending ? !onStop : !canSend}
             className="size-9 rounded-full"
-            aria-label="Send message"
+            aria-label={isSending ? "Stop response" : "Send message"}
           >
-            {isSending ? <Spinner /> : <ArrowUpIcon />}
+            {isSending ? <SquareIcon className="size-3 fill-current" /> : <ArrowUpIcon />}
           </InputGroupButton>
         </InputGroupAddon>
       </InputGroup>
-      <p className="mt-2 text-center text-xs text-muted-foreground">
-        AI can make mistakes. Check important info.
+      <p className="mt-3 text-center text-[11px] text-muted-foreground">
+        Wisp can make mistakes. A second look is always a good idea.
       </p>
     </form>
   );
